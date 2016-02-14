@@ -1,0 +1,953 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\begin_modules
+noweb
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1.25cm
+\topmargin 1.25cm
+\rightmargin 1.25cm
+\bottommargin 1.25cm
+\headheight 1.25cm
+\headsep 1.25cm
+\footskip 1.25cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Python Assignment 6: Simulating Linear System Response
+\end_layout
+
+\begin_layout Author
+Srivatsan R
+\begin_inset Newline newline
+\end_inset
+
+EE14B058
+\begin_inset Newline newline
+\end_inset
+
+Department of Electrical Engineering
+\end_layout
+
+\begin_layout Abstract
+This week was the sixth week of python programming done as a part of CAD
+ lab.
+ This report is about the python assignment that is supposed to analyse
+ linear time invariant systems.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Python assignment
+\end_layout
+
+\begin_layout Subsection
+Aim
+\end_layout
+
+\begin_layout Standard
+This week's assignment deals with the analysis of inear time invariant systems
+ to find the Frequency responce and Time response of the systems.
+\end_layout
+
+\begin_layout Subsection
+Source Code
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<import>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+from scipy import *
+\end_layout
+
+\begin_layout Plain Layout
+
+from matplotlib.pyplot import * #For plots
+\end_layout
+
+\begin_layout Plain Layout
+
+import scipy.signal as signal #for analysis of LTI systems
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The required imports for the program 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<func>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+def solveDE( n, d, t ):
+\end_layout
+
+\begin_layout Plain Layout
+
+	num=poly1d(n) #defining a polynomial with coeffs.
+ n
+\end_layout
+
+\begin_layout Plain Layout
+
+	den=poly1d(d) #defining a polynomial with coeffs.
+ d
+\end_layout
+
+\begin_layout Plain Layout
+
+	sys1=signal.lti(num,den) #define an lti signal with transfer function num/den
+\end_layout
+
+\begin_layout Plain Layout
+
+	y=sys1.impulse(T=t)[1] #exciting the system with an unit impulse function
+\end_layout
+
+\begin_layout Plain Layout
+
+	return y
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This function is used in solving the differential equation by finding the
+ laplace transform of the time response of the DE.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<fig1>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+t=linspace(0,20,201)
+\end_layout
+
+\begin_layout Plain Layout
+
+#Plot of Time response of Spring system
+\end_layout
+
+\begin_layout Plain Layout
+
+figure(1)
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(t,solveDE( [0.1,0], [1,0,1], t) ,'r')
+\end_layout
+
+\begin_layout Plain Layout
+
+title("Time Response $
+\backslash
+ddot{x}+x$")
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The time response for the spring system governed by the equation 
+\begin_inset Formula $\ddot{x}+x$
+\end_inset
+
+ is plotted.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<fig2>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+#Plot of time response of coupled oscillations
+\end_layout
+
+\begin_layout Plain Layout
+
+figure(2)
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(t,solveDE( [1,0,2,0], [1,0,3,0,0], t),'r',label='$x(t)$')
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(t,solveDE( [2,0], [1,0,3,0,0], t),'b',label='$y(t)$')
+\end_layout
+
+\begin_layout Plain Layout
+
+legend()
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel(r'$t$')
+\end_layout
+
+\begin_layout Plain Layout
+
+title("Time Response of $
+\backslash
+ddot{x}+(x-y)=0$ ; $
+\backslash
+ddot{y}+2(y-x)=0$")
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The plot of time responses of the coupled oscillations 
+\begin_inset Formula $\ddot{x}+(x-y)=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\ddot{y}+2(y-x)=0$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<fig3>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+#R1,L,R2 are connected in series.
+\end_layout
+
+\begin_layout Plain Layout
+
+L=1e-3 
+\end_layout
+
+\begin_layout Plain Layout
+
+R1=10 
+\end_layout
+
+\begin_layout Plain Layout
+
+R2=100 
+\end_layout
+
+\begin_layout Plain Layout
+
+omega=logspace(3,9,61).reshape((61,1)) # decades in steps
+\end_layout
+
+\begin_layout Plain Layout
+
+H=R2/((R1+R2) + 1j*omega*L) #Transfer function of the two port network
+\end_layout
+
+\begin_layout Plain Layout
+
+figure(3)
+\end_layout
+
+\begin_layout Plain Layout
+
+cla()
+\end_layout
+
+\begin_layout Plain Layout
+
+subplot(211)
+\end_layout
+
+\begin_layout Plain Layout
+
+loglog(omega,abs(H),'ro') #A loglog plot
+\end_layout
+
+\begin_layout Plain Layout
+
+title("Frequency Response")
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel(r"$
+\backslash
+omega$")
+\end_layout
+
+\begin_layout Plain Layout
+
+ylabel(r"$|H|$")
+\end_layout
+
+\begin_layout Plain Layout
+
+subplot(212)
+\end_layout
+
+\begin_layout Plain Layout
+
+semilogx(omega,180*angle(H)/pi,'ro') #A semilog plot
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel(r"$
+\backslash
+omega$")
+\end_layout
+
+\begin_layout Plain Layout
+
+ylabel(r"Arg$(H)$")
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The magnitude and phase response of the steady state transfer function is
+ plotted against omega.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<fig4>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+#Plot of time response of input and output for t<30us
+\end_layout
+
+\begin_layout Plain Layout
+
+figure(4)
+\end_layout
+
+\begin_layout Plain Layout
+
+t = linspace(0,30e-6,301)
+\end_layout
+
+\begin_layout Plain Layout
+
+inp=cos(1e3*t)-cos(1e6*t)
+\end_layout
+
+\begin_layout Plain Layout
+
+num1 = poly1d([1e12-1e6,0]) 
+\end_layout
+
+\begin_layout Plain Layout
+
+den1 = poly1d([1,0,1e12+1e6,0,1e18]) #Input signals Laplace transform
+\end_layout
+
+\begin_layout Plain Layout
+
+num2 = poly1d([R2])
+\end_layout
+
+\begin_layout Plain Layout
+
+den2 = poly1d([L,R1+R2]) #The transfer function of the two port network
+\end_layout
+
+\begin_layout Plain Layout
+
+num = polymul(num1,num2)
+\end_layout
+
+\begin_layout Plain Layout
+
+den = polymul(den1,den2) #The Laplace transform of the output
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(t,solveDE(asarray(num), asarray(den), t),'b',label="Output")
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(t,inp,'g',label="Input")
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel(r'$t$')
+\end_layout
+
+\begin_layout Plain Layout
+
+title("Time Response of LR Circuit")
+\end_layout
+
+\begin_layout Plain Layout
+
+legend()
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+num1 and den1 are the numerator and denominator of the Laplace transform
+ of the input signal x(t) = cos(10
+\begin_inset Formula $^{3}t$
+\end_inset
+
+ ) - cos(10
+\begin_inset Formula $^{6}t$
+\end_inset
+
+).
+ num2 and den2 are the numerator and denominator of the Transfer function
+ of the network.
+ Both the functions are multiplied to get the Laplace transform of the output
+ signal.
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<fig5>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+#Plot for t<10ms (output)
+\end_layout
+
+\begin_layout Plain Layout
+
+figure(5)
+\end_layout
+
+\begin_layout Plain Layout
+
+t = arange(0,10e-3,1e-6)
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(t,solveDE(asarray(num), asarray(den), t) ,'r')
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel('$t$')
+\end_layout
+
+\begin_layout Plain Layout
+
+title('Time response of output')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+#Plot for t<10ms (input)
+\end_layout
+
+\begin_layout Plain Layout
+
+figure(6)
+\end_layout
+
+\begin_layout Plain Layout
+
+inp=cos(1e3*t)-cos(1e6*t)
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(t,inp ,'g')
+\end_layout
+
+\begin_layout Plain Layout
+
+title('Time response of input')
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel('$t$')
+\end_layout
+
+\begin_layout Plain Layout
+
+show()
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+It is the same plot as figure 4 but the plot is for t<10ms .
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<*>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+<<import>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<func>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<fig1>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<fig2>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<fig3>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<fig4>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<fig5>>
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Command Line
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+python lti.py
+\end_layout
+
+\begin_layout Subsection
+Output
+\end_layout
+
+\begin_layout Subsubsection
+Time response of 
+\begin_inset Formula $\ddot{x}+x$
+\end_inset
+
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename figure_1.png
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Time response of 
+\begin_inset Formula $\ddot{x}+(x-y)=0$
+\end_inset
+
+ , 
+\begin_inset Formula $\ddot{y}+2(y-x)=0$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename figure_2.png
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Frequency response and magitude response
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename figure_3.png
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Time Response of LR Circuit
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename figure_4.png
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Time response of Output
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename figure_5.png
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Time response of Input
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename figure_6.png
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\end_body
+\end_document

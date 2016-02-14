@@ -1,0 +1,1505 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\begin_modules
+noweb
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1.25cm
+\topmargin 1.25cm
+\rightmargin 1.25cm
+\bottommargin 1.25cm
+\headheight 1.25cm
+\headsep 1.25cm
+\footskip 1.25cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Python Assignment 4: Tubelight Simulator
+\end_layout
+
+\begin_layout Author
+Srivatsan R
+\begin_inset Newline newline
+\end_inset
+
+EE14B058
+\begin_inset Newline newline
+\end_inset
+
+Department of Electrical Engineering
+\end_layout
+
+\begin_layout Abstract
+This week was the fourth week of python programming done as a part of CAD
+ lab.
+ This report is about the python assignment that is supposed to simulate
+ the illumination of a tubelight.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Python assignment
+\end_layout
+
+\begin_layout Standard
+This week's assignment deals with the simulation model of a tubelight.
+ 
+\end_layout
+
+\begin_layout Subsection
+Tubelight model
+\end_layout
+
+\begin_layout Standard
+A 1-Dimensional model of the tubelight was considered.
+ A uniform electric field is present, that accelerates electrons.
+ Electrons are emitted by the cathode with zero energy, and accelerate in
+ this field.
+ When they get beyond a threshold energy E
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+
+ ( or a threshold velocity u
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+
+), they can drive atoms to excited states.
+ The relaxation of these atoms results in light emission.
+ In our model, we will assume that the relaxation is immediate.
+ The electron loses all its energy and the process starts again.
+ Electrons reaching the anode are absorbed and lost.
+ Each “time step”, an average of N electrons are introduced at the cathode.
+ The actual number of electrons is determined by finding the integer part
+ of a random number that is “normally distributed” with standard deviation
+ of Msig and a mean of M which is obtained from the command line.
+ 
+\end_layout
+
+\begin_layout Subsection
+Simulation
+\end_layout
+
+\begin_layout Standard
+We create a simulation universe.
+ The tube is divided into n sections.
+ In each time instant, M electrons are injected.
+ We run the simulation for nk turns.
+ The electrons are unable to excite the atoms till they have a velocity
+ of u0.
+ Beyond this velocity, there is a probability p in each turn that a collision
+ will occur and an atom excited.
+ Note that the electron’s velocity reduces to zero if it collides.
+ We get these values as console input.
+ Create vectors xx,u,dx to hold the electron information.
+ We need vectors X,V and I to accumulate information as part of the simulation.
+ Then, we find the electrons present in the chamber.
+ We compute the displacement during this turn, assuming that the Electric
+ field creates an acceleration of 1.
+ Then, advance the electron position and velocity for the turn.
+ Determine which particles have hit the anode and set the positions, displacemen
+ts and velocities of these particles to zero.
+ Find those electrons whose velocity is greater than or equal to the threshold.
+ Reset the velocities of these electrons to zero.
+ The excited atoms at this location resulted in emission from that point.
+ So we have to add a photon at that point.
+ To add these photons to the I vector, we use the following code: 
+\family typewriter
+\series bold
+I.extend(xx[kl].tolist()).
+
+\family default
+\series default
+ Now inject M new electrons.
+ First determine the actual number of electrons injected as 
+\family typewriter
+\series bold
+m=randn()*Msig+M
+\family default
+\series default
+.
+ Again find all the existing electrons.
+ This time, add their positions and velocities to the X and V vectors.
+ We first plot the “electron density”, i.e., the number of electrons between
+ i and i + 1.
+ We can do this by generating a population plot of X.
+ Then, plot a population plot of the light intensity.
+\end_layout
+
+\begin_layout Subsection
+Source Code
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<import>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+# Importing necessary libraries
+\end_layout
+
+\begin_layout Plain Layout
+
+import sys #Used for taking command line arguments
+\end_layout
+
+\begin_layout Plain Layout
+
+import numpy as np #Used for importing numpy
+\end_layout
+
+\begin_layout Plain Layout
+
+from pylab import * #Used for plotting and making use of array
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The required imports for the program 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<arg>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+#Check for command line arguments
+\end_layout
+
+\begin_layout Plain Layout
+
+if(len(sys.argv)!=7):
+\end_layout
+
+\begin_layout Plain Layout
+
+	print "6 arguments have to be passed <n> <M> <nk> <u0> <p> <Msig>"
+\end_layout
+
+\begin_layout Plain Layout
+
+	exit(1)
+\end_layout
+
+\begin_layout Plain Layout
+
+else:
+\end_layout
+
+\begin_layout Plain Layout
+
+	n,M,nk,u0,p,Msig = sys.argv[1:]
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+#Converting string values into integers and float
+\end_layout
+
+\begin_layout Plain Layout
+
+n,M,nk,u0,p,Msig = int(n),int(M),int(nk),int(u0),float(p),float(Msig)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The six arguments required as an input for the successful execution of the
+ program are got in as command line arguments and are converted to int and
+ float.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<vect>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+#Creating zero vectors 
+\end_layout
+
+\begin_layout Plain Layout
+
+xx = np.zeros(n*M) #Electron position xx
+\end_layout
+
+\begin_layout Plain Layout
+
+u = np.zeros(n*M) #Electron velocity u
+\end_layout
+
+\begin_layout Plain Layout
+
+dx = np.zeros(n*M) #Displacement in current turn dx
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+I = []# Intensity of emitted light
+\end_layout
+
+\begin_layout Plain Layout
+
+X = []# Electron position
+\end_layout
+
+\begin_layout Plain Layout
+
+V = []# Electron Velocity
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This chunk deals with defining vectors that store electron information at
+ every turn and also during each simulation.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<insert>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+def insertElectrons(m):
+\end_layout
+
+\begin_layout Plain Layout
+
+	jj = where(xx==0) #Taking all the values where xx = 0
+\end_layout
+
+\begin_layout Plain Layout
+
+	jj = jj[0][:m] #Selecting the first m electrons out of it
+\end_layout
+
+\begin_layout Plain Layout
+
+	xx[jj] = 1 #Assigning those indices as 1
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This function inserts electrons into the xx vector where it has a value
+ 0.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<update>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+def updateValues(ii):
+\end_layout
+
+\begin_layout Plain Layout
+
+	dx[ii[0]] = u[ii[0]] + 0.5 #Accelerating the dx
+\end_layout
+
+\begin_layout Plain Layout
+
+	xx[ii[0]] = xx[ii[0]] + dx[ii] #Incrementing the xx
+\end_layout
+
+\begin_layout Plain Layout
+
+	u[ii[0]] = u[ii[0]] + 1 #Incrementing the velocity
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This function updates the position, displacement and the velocity of the
+ electron after each iteration.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<remove>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+def removeElectrons(bb):
+\end_layout
+
+\begin_layout Plain Layout
+
+	xx[bb[0]] = 0 #Making it's position 0
+\end_layout
+
+\begin_layout Plain Layout
+
+	dx[bb[0]] = 0 #Making it's dx 0
+\end_layout
+
+\begin_layout Plain Layout
+
+	u[bb[0]] = 0 #Making it's velocity 0
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Removes the electron by resetting its values to 0.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<collide>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+def simulateCollision(kk):
+\end_layout
+
+\begin_layout Plain Layout
+
+	if(size(kk[0])>0):
+\end_layout
+
+\begin_layout Plain Layout
+
+		ll=where(rand(len(kk[0]))<=p)
+\end_layout
+
+\begin_layout Plain Layout
+
+		kl=kk[0][ll]
+\end_layout
+
+\begin_layout Plain Layout
+
+		if (size(kl)>0):
+\end_layout
+
+\begin_layout Plain Layout
+
+			u[kl] = 0 #Assigning velocity back to 0
+\end_layout
+
+\begin_layout Plain Layout
+
+			xx[kl] = xx[kl] - ( dx[kl] * rand(size(kl)) ) #Reducing the position
+\end_layout
+
+\begin_layout Plain Layout
+
+			I.extend(xx[kl].tolist()) #Appending to Intensity list
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This function simulates collision by resetting the position of the electrons
+ by a random number and it resets the velocity to 0.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<iterate>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+#Iterating nk times
+\end_layout
+
+\begin_layout Plain Layout
+
+for i in range(nk):
+\end_layout
+
+\begin_layout Plain Layout
+
+	m = (randn() * Msig) + M #Inserting m electrons everytime
+\end_layout
+
+\begin_layout Plain Layout
+
+	m = int(m)
+\end_layout
+
+\begin_layout Plain Layout
+
+	insertElectrons(m)
+\end_layout
+
+\begin_layout Plain Layout
+
+	ii = where(xx>0) #Checking for where xx>0 and taking in the indices
+\end_layout
+
+\begin_layout Plain Layout
+
+	X.extend(xx[ii[0]].tolist()) #Adding those position to electron position
+ list
+\end_layout
+
+\begin_layout Plain Layout
+
+	V.extend(u[ii[0]].tolist()) #Adding those position to electron velocity list
+\end_layout
+
+\begin_layout Plain Layout
+
+	updateValues(ii)
+\end_layout
+
+\begin_layout Plain Layout
+
+	bb = where(xx>n) #Checking for if the electron has crossed the tube length
+\end_layout
+
+\begin_layout Plain Layout
+
+	removeElectrons(bb)
+\end_layout
+
+\begin_layout Plain Layout
+
+	kk = where(u>u0) #Checking for where the velocity has crossed the threshold
+ velocity
+\end_layout
+
+\begin_layout Plain Layout
+
+	simulateCollision(kk)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This iterates the process by calling the above defined functions again and
+ again for nk times.
+ After this loop gets over the X, V, I lists are populated with data obtained
+ from tubelight simulation.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<hist>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+#Function to display the Position Histogram
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+figure(0)
+\end_layout
+
+\begin_layout Plain Layout
+
+hist(X, n,(0,n))
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel("Position")
+\end_layout
+
+\begin_layout Plain Layout
+
+ylabel("Electron Density")
+\end_layout
+
+\begin_layout Plain Layout
+
+title("Population Plot of X")
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+#Function to display the Intensity Histogram
+\end_layout
+
+\begin_layout Plain Layout
+
+figure(1)
+\end_layout
+
+\begin_layout Plain Layout
+
+count = hist(I, n,(0,n))
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel("Position")
+\end_layout
+
+\begin_layout Plain Layout
+
+ylabel("Population count/intensity")
+\end_layout
+
+\begin_layout Plain Layout
+
+title("Histogram of the light intensity")
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+#Tabulating the Intensity Plot
+\end_layout
+
+\begin_layout Plain Layout
+
+print "INTENSITY DATA:"
+\end_layout
+
+\begin_layout Plain Layout
+
+print "-------------"
+\end_layout
+
+\begin_layout Plain Layout
+
+print "xpos | count"
+\end_layout
+
+\begin_layout Plain Layout
+
+print "-------------"
+\end_layout
+
+\begin_layout Plain Layout
+
+for i in range(len(count[0])):
+\end_layout
+
+\begin_layout Plain Layout
+
+	print "%d    |    %d" %(count[1][i]+1,count[0][i])
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+#Function to display the Electron Phase Space Plot
+\end_layout
+
+\begin_layout Plain Layout
+
+figure(2)
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(X,V,'ro')
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel("Position")
+\end_layout
+
+\begin_layout Plain Layout
+
+ylabel("Velocity")
+\end_layout
+
+\begin_layout Plain Layout
+
+title("Electron Phase Space")
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+show()
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This chunk is for the code snippet which plots the required histograms and
+ plots.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<*>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+<<import>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<arg>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<vect>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<insert>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<update>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<remove>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<collide>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<iterate>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<hist>>
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Command Line
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+python python4.py 100 5 500 7 0.5 2
+\end_layout
+
+\begin_layout Subsection
+Output
+\end_layout
+
+\begin_layout Subsubsection
+The histogram of X indicating electron density
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename fig0.png
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+The histogram plot of intensity versus position.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename fig1.png
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Phase Space diagram:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename fig2.png
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Intensity data table output:
+\end_layout
+
+\begin_layout LyX-Code
+INTENSITY DATA:
+\end_layout
+
+\begin_layout LyX-Code
+-------------
+\end_layout
+
+\begin_layout LyX-Code
+xpos | count
+\end_layout
+
+\begin_layout LyX-Code
+-------------
+\end_layout
+
+\begin_layout LyX-Code
+1    |    0
+\end_layout
+
+\begin_layout LyX-Code
+2    |    0
+\end_layout
+
+\begin_layout LyX-Code
+3    |    0
+\end_layout
+
+\begin_layout LyX-Code
+4    |    0
+\end_layout
+
+\begin_layout LyX-Code
+5    |    0
+\end_layout
+
+\begin_layout LyX-Code
+6    |    0
+\end_layout
+
+\begin_layout LyX-Code
+7    |    0
+\end_layout
+
+\begin_layout LyX-Code
+8    |    0
+\end_layout
+
+\begin_layout LyX-Code
+9    |    0
+\end_layout
+
+\begin_layout LyX-Code
+10    |    0
+\end_layout
+
+\begin_layout LyX-Code
+11    |    0
+\end_layout
+
+\begin_layout LyX-Code
+12    |    0
+\end_layout
+
+\begin_layout LyX-Code
+13    |    0
+\end_layout
+
+\begin_layout LyX-Code
+14    |    0
+\end_layout
+
+\begin_layout LyX-Code
+15    |    0
+\end_layout
+
+\begin_layout LyX-Code
+16    |    0
+\end_layout
+
+\begin_layout LyX-Code
+17    |    0
+\end_layout
+
+\begin_layout LyX-Code
+18    |    0
+\end_layout
+
+\begin_layout LyX-Code
+19    |    0
+\end_layout
+
+\begin_layout LyX-Code
+20    |    0
+\end_layout
+
+\begin_layout LyX-Code
+21    |    0
+\end_layout
+
+\begin_layout LyX-Code
+22    |    0
+\end_layout
+
+\begin_layout LyX-Code
+23    |    0
+\end_layout
+
+\begin_layout LyX-Code
+24    |    0
+\end_layout
+
+\begin_layout LyX-Code
+25    |    0
+\end_layout
+
+\begin_layout LyX-Code
+26    |    76
+\end_layout
+
+\begin_layout LyX-Code
+27    |    170
+\end_layout
+
+\begin_layout LyX-Code
+28    |    161
+\end_layout
+
+\begin_layout LyX-Code
+29    |    161
+\end_layout
+
+\begin_layout LyX-Code
+30    |    154
+\end_layout
+
+\begin_layout LyX-Code
+31    |    176
+\end_layout
+
+\begin_layout LyX-Code
+32    |    181
+\end_layout
+
+\begin_layout LyX-Code
+33    |    170
+\end_layout
+
+\begin_layout LyX-Code
+34    |    78
+\end_layout
+
+\begin_layout LyX-Code
+35    |    83
+\end_layout
+
+\begin_layout LyX-Code
+36    |    84
+\end_layout
+
+\begin_layout LyX-Code
+37    |    98
+\end_layout
+
+\begin_layout LyX-Code
+38    |    78
+\end_layout
+
+\begin_layout LyX-Code
+39    |    92
+\end_layout
+
+\begin_layout LyX-Code
+40    |    64
+\end_layout
+
+\begin_layout LyX-Code
+41    |    94
+\end_layout
+
+\begin_layout LyX-Code
+42    |    65
+\end_layout
+
+\begin_layout LyX-Code
+43    |    33
+\end_layout
+
+\begin_layout LyX-Code
+44    |    27
+\end_layout
+
+\begin_layout LyX-Code
+45    |    32
+\end_layout
+
+\begin_layout LyX-Code
+46    |    35
+\end_layout
+
+\begin_layout LyX-Code
+47    |    23
+\end_layout
+
+\begin_layout LyX-Code
+48    |    40
+\end_layout
+
+\begin_layout LyX-Code
+49    |    29
+\end_layout
+
+\begin_layout LyX-Code
+50    |    39
+\end_layout
+
+\begin_layout LyX-Code
+51    |    37
+\end_layout
+
+\begin_layout LyX-Code
+52    |    37
+\end_layout
+
+\begin_layout LyX-Code
+53    |    46
+\end_layout
+
+\begin_layout LyX-Code
+54    |    62
+\end_layout
+
+\begin_layout LyX-Code
+55    |    63
+\end_layout
+
+\begin_layout LyX-Code
+56    |    71
+\end_layout
+
+\begin_layout LyX-Code
+57    |    88
+\end_layout
+
+\begin_layout LyX-Code
+58    |    96
+\end_layout
+
+\begin_layout LyX-Code
+59    |    86
+\end_layout
+
+\begin_layout LyX-Code
+60    |    74
+\end_layout
+
+\begin_layout LyX-Code
+61    |    102
+\end_layout
+
+\begin_layout LyX-Code
+62    |    80
+\end_layout
+
+\begin_layout LyX-Code
+63    |    82
+\end_layout
+
+\begin_layout LyX-Code
+64    |    112
+\end_layout
+
+\begin_layout LyX-Code
+65    |    80
+\end_layout
+
+\begin_layout LyX-Code
+66    |    77
+\end_layout
+
+\begin_layout LyX-Code
+67    |    78
+\end_layout
+
+\begin_layout LyX-Code
+68    |    91
+\end_layout
+
+\begin_layout LyX-Code
+69    |    82
+\end_layout
+
+\begin_layout LyX-Code
+70    |    82
+\end_layout
+
+\begin_layout LyX-Code
+71    |    60
+\end_layout
+
+\begin_layout LyX-Code
+72    |    75
+\end_layout
+
+\begin_layout LyX-Code
+73    |    59
+\end_layout
+
+\begin_layout LyX-Code
+74    |    48
+\end_layout
+
+\begin_layout LyX-Code
+75    |    66
+\end_layout
+
+\begin_layout LyX-Code
+76    |    44
+\end_layout
+
+\begin_layout LyX-Code
+77    |    49
+\end_layout
+
+\begin_layout LyX-Code
+78    |    61
+\end_layout
+
+\begin_layout LyX-Code
+79    |    53
+\end_layout
+
+\begin_layout LyX-Code
+80    |    53
+\end_layout
+
+\begin_layout LyX-Code
+81    |    54
+\end_layout
+
+\begin_layout LyX-Code
+82    |    48
+\end_layout
+
+\begin_layout LyX-Code
+83    |    52
+\end_layout
+
+\begin_layout LyX-Code
+84    |    65
+\end_layout
+
+\begin_layout LyX-Code
+85    |    75
+\end_layout
+
+\begin_layout LyX-Code
+86    |    78
+\end_layout
+
+\begin_layout LyX-Code
+87    |    81
+\end_layout
+
+\begin_layout LyX-Code
+88    |    63
+\end_layout
+
+\begin_layout LyX-Code
+89    |    68
+\end_layout
+
+\begin_layout LyX-Code
+90    |    74
+\end_layout
+
+\begin_layout LyX-Code
+91    |    65
+\end_layout
+
+\begin_layout LyX-Code
+92    |    53
+\end_layout
+
+\begin_layout LyX-Code
+93    |    67
+\end_layout
+
+\begin_layout LyX-Code
+94    |    65
+\end_layout
+
+\begin_layout LyX-Code
+95    |    62
+\end_layout
+
+\begin_layout LyX-Code
+96    |    37
+\end_layout
+
+\begin_layout LyX-Code
+97    |    37
+\end_layout
+
+\begin_layout LyX-Code
+98    |    18
+\end_layout
+
+\begin_layout LyX-Code
+99    |    14
+\end_layout
+
+\begin_layout LyX-Code
+100    |    8
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\end_body
+\end_document

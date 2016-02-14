@@ -1,0 +1,825 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\begin_modules
+noweb
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1.25cm
+\topmargin 1.25cm
+\rightmargin 1.25cm
+\bottommargin 1.25cm
+\headheight 1.25cm
+\headsep 1.25cm
+\footskip 1.25cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Week 7 : Introduction to Python
+\end_layout
+
+\begin_layout Author
+Srivatsan R
+\begin_inset Newline newline
+\end_inset
+
+EE14B058
+\begin_inset Newline newline
+\end_inset
+
+Department Of Electrical Engineering
+\end_layout
+
+\begin_layout Abstract
+This report is about a python program which introduces to the basics of
+ python.
+\end_layout
+
+\begin_layout Section
+Python Assignment
+\end_layout
+
+\begin_layout Subsection
+Aim
+\end_layout
+
+\begin_layout Standard
+The aim of this program is to write a python program to read a spice file
+ and parse the node names and values of each components into numbers and
+ print then in terminal.
+\end_layout
+
+\begin_layout Subsection
+Source Code
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<imports>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+import re,sys,operator,math
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+The import re is for regular expressions' module, the sys module is for
+ accessing command line arguments, and the operator is for sorting the list.
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<global>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+flag=0
+\end_layout
+
+\begin_layout Plain Layout
+
+size=0
+\end_layout
+
+\begin_layout Plain Layout
+
+elements=[]
+\end_layout
+
+\begin_layout Plain Layout
+
+node={}
+\end_layout
+
+\begin_layout Plain Layout
+
+mul={"p":1e-12, "n":1e-9, "u":1e-6, "m":1e-3, "k":1e3, "meg":1e6}
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+The variable flag is used for checking whether a .circuit line appeared in
+ the spice file.
+ size holds the number of nodes present other than the ground node.
+ The list elements is a list of all the circuit elements in the spice file.
+ The dictionary node contains the mapped values of each node name.
+ The dictionary mul stores the multiplier values.
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<getvalue>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+def getValue(val=''):
+\end_layout
+
+\begin_layout Plain Layout
+
+	v=0.0
+\end_layout
+
+\begin_layout Plain Layout
+
+	l=re.match("(^[+-]?[0-9]+)([
+\backslash
+.][0-9]+)?([a-z]*)?",val).groups()
+\end_layout
+
+\begin_layout Plain Layout
+
+	if l[1]==None:
+\end_layout
+
+\begin_layout Plain Layout
+
+		v=float(l[0])
+\end_layout
+
+\begin_layout Plain Layout
+
+	else :
+\end_layout
+
+\begin_layout Plain Layout
+
+		v=float(''.join(l[:2]))
+\end_layout
+
+\begin_layout Plain Layout
+
+	if l[2]=='':
+\end_layout
+
+\begin_layout Plain Layout
+
+		return v
+\end_layout
+
+\begin_layout Plain Layout
+
+	else:
+\end_layout
+
+\begin_layout Plain Layout
+
+		if mul.has_key(l[2]):
+\end_layout
+
+\begin_layout Plain Layout
+
+			return v*mul[l[2]]
+\end_layout
+
+\begin_layout Plain Layout
+
+		else :
+\end_layout
+
+\begin_layout Plain Layout
+
+			print 'Invalid Multiplier'
+\end_layout
+
+\begin_layout Plain Layout
+
+			sys.exit(0)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+The method getValue() converts the value of the electrical components in
+ string to the corresponding number and prints 'Invalid Multiplier' if the
+ multiplier is invalid.
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<insert>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+def insertDict(a=''):
+\end_layout
+
+\begin_layout Plain Layout
+
+	global size
+\end_layout
+
+\begin_layout Plain Layout
+
+	if node.has_key(a)==False:
+\end_layout
+
+\begin_layout Plain Layout
+
+		if a=='0' or a=='GND':
+\end_layout
+
+\begin_layout Plain Layout
+
+			node[a]=0
+\end_layout
+
+\begin_layout Plain Layout
+
+			return
+\end_layout
+
+\begin_layout Plain Layout
+
+    		node[a]=size+1
+\end_layout
+
+\begin_layout Plain Layout
+
+    		size=size+1
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+Inserts a node into the dictionary.
+ If the node is a '0' or 'GND' node, then it is assigned a value 0.
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<file>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+f = open(sys.argv[1], 'r')
+\end_layout
+
+\begin_layout Plain Layout
+
+for line in f:
+\end_layout
+
+\begin_layout Plain Layout
+
+    if line.lower()=='.circuit
+\backslash
+n':
+\end_layout
+
+\begin_layout Plain Layout
+
+        flag=1
+\end_layout
+
+\begin_layout Plain Layout
+
+        continue
+\end_layout
+
+\begin_layout Plain Layout
+
+    elif flag==0:
+\end_layout
+
+\begin_layout Plain Layout
+
+        continue
+\end_layout
+
+\begin_layout Plain Layout
+
+    elif line.lower()=='.end
+\backslash
+n':
+\end_layout
+
+\begin_layout Plain Layout
+
+        break
+\end_layout
+
+\begin_layout Plain Layout
+
+    if line[0]=='*' or line[0]=='
+\backslash
+n' or line[0]=='#' or line[0]=='.':
+\end_layout
+
+\begin_layout Plain Layout
+
+        continue
+\end_layout
+
+\begin_layout Plain Layout
+
+    line = line[:-1].split('#')[0]
+\end_layout
+
+\begin_layout Plain Layout
+
+    l = line.split(' ')[:4]
+\end_layout
+
+\begin_layout Plain Layout
+
+    if len(l)!=4:
+\end_layout
+
+\begin_layout Plain Layout
+
+        print 'Error'
+\end_layout
+
+\begin_layout Plain Layout
+
+        sys.exit(0)
+\end_layout
+
+\begin_layout Plain Layout
+
+    insertDict(l[1])
+\end_layout
+
+\begin_layout Plain Layout
+
+    insertDict(l[2])
+\end_layout
+
+\begin_layout Plain Layout
+
+    elements.append(l)
+\end_layout
+
+\begin_layout Plain Layout
+
+    print line
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+Opens a file given as a command line argument and reads its contents and
+ stores it in the list elements and prints the line.
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<list>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+print 'Reconstructed Listing'
+\end_layout
+
+\begin_layout Plain Layout
+
+for x in elements:
+\end_layout
+
+\begin_layout Plain Layout
+
+    x[3]=str(getValue(x[3]))
+\end_layout
+
+\begin_layout Plain Layout
+
+    print x[0]+' '+str(node[x[1]])+' '+str(node[x[2]])+' '+x[3]
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+Prints the list by changing the values to numbers and node names to its
+ corresponding indices.
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<nodes>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+print 'List of Nodes'
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+for (key,val) in sorted(node.items(), key=operator.itemgetter(1)):
+\end_layout
+
+\begin_layout Plain Layout
+
+	print str(val)+':'+key
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+Prints the node names associated with the node numbers in the dictionary
+ after sorting it.
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<*>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+<<imports>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<global>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<getvalue>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<insert>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<file>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<list>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<nodes>>
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Output
+\end_layout
+
+\begin_layout Subsubsection
+Input File Contents
+\end_layout
+
+\begin_layout LyX-Code
+*SPICE circuit <filter1a> from XCircuit v3.7 rev 55
+\end_layout
+
+\begin_layout LyX-Code
+.circuit
+\end_layout
+
+\begin_layout LyX-Code
+L1 1 2 80.96u
+\end_layout
+
+\begin_layout LyX-Code
+L2 2 3 80.96u
+\end_layout
+
+\begin_layout LyX-Code
+R1 3 GND 4k
+\end_layout
+
+\begin_layout LyX-Code
+V1 in GND 3
+\end_layout
+
+\begin_layout LyX-Code
+C1 2 GND 2.485p
+\end_layout
+
+\begin_layout LyX-Code
+R2 in 1 4.0k
+\end_layout
+
+\begin_layout LyX-Code
+V2 3 4 5
+\end_layout
+
+\begin_layout LyX-Code
+R3 4 GND 5k
+\end_layout
+
+\begin_layout LyX-Code
+.end
+\end_layout
+
+\begin_layout Subsubsection
+Corresponding Output
+\end_layout
+
+\begin_layout LyX-Code
+L1 1 2 80.96u
+\end_layout
+
+\begin_layout LyX-Code
+L2 2 3 80.96u
+\end_layout
+
+\begin_layout LyX-Code
+R1 3 GND 4k
+\end_layout
+
+\begin_layout LyX-Code
+V1 in GND 3
+\end_layout
+
+\begin_layout LyX-Code
+C1 2 GND 2.485p
+\end_layout
+
+\begin_layout LyX-Code
+R2 in 1 4.0k
+\end_layout
+
+\begin_layout LyX-Code
+V2 3 4 5
+\end_layout
+
+\begin_layout LyX-Code
+R3 4 GND 5k
+\end_layout
+
+\begin_layout LyX-Code
+Reconstructed Listing
+\end_layout
+
+\begin_layout LyX-Code
+L1 1 2 8.096e-05
+\end_layout
+
+\begin_layout LyX-Code
+L2 2 3 8.096e-05
+\end_layout
+
+\begin_layout LyX-Code
+R1 3 0 4000.0
+\end_layout
+
+\begin_layout LyX-Code
+V1 4 0 3.0
+\end_layout
+
+\begin_layout LyX-Code
+C1 2 0 2.485e-12
+\end_layout
+
+\begin_layout LyX-Code
+R2 4 1 4000.0
+\end_layout
+
+\begin_layout LyX-Code
+V2 3 5 5.0
+\end_layout
+
+\begin_layout LyX-Code
+R3 5 0 5000.0
+\end_layout
+
+\begin_layout LyX-Code
+List of Nodes
+\end_layout
+
+\begin_layout LyX-Code
+0:GND
+\end_layout
+
+\begin_layout LyX-Code
+1:1
+\end_layout
+
+\begin_layout LyX-Code
+2:2
+\end_layout
+
+\begin_layout LyX-Code
+3:3
+\end_layout
+
+\begin_layout LyX-Code
+4:in
+\end_layout
+
+\begin_layout LyX-Code
+5:4
+\end_layout
+
+\begin_layout Standard
+
+\end_layout
+
+\end_body
+\end_document

@@ -1,0 +1,1028 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\begin_modules
+noweb
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1.25cm
+\topmargin 1.25cm
+\rightmargin 1.25cm
+\bottommargin 1.25cm
+\headheight 1.25cm
+\headsep 1.25cm
+\footskip 1.25cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Python Assignment 5: Laplace Equation
+\end_layout
+
+\begin_layout Author
+Srivatsan R
+\begin_inset Newline newline
+\end_inset
+
+EE14B058
+\begin_inset Newline newline
+\end_inset
+
+Department of Electrical Engineering
+\end_layout
+
+\begin_layout Abstract
+This week was the fifth week of python programming done as a part of CAD
+ lab.
+ This report is about the python assignment that is supposed to simulate
+ current flow through a resistor.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Python assignment
+\end_layout
+
+\begin_layout Subsection
+Aim
+\end_layout
+
+\begin_layout Standard
+This week's assignment deals with the solving of laplace equation to find
+ the electric potential distribution inside a current carrying conductor.
+ 
+\end_layout
+
+\begin_layout Subsection
+Source Code
+\end_layout
+
+\begin_layout Standard
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<import>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+from pylab import *
+\end_layout
+
+\begin_layout Plain Layout
+
+import mpl_toolkits.mplot3d.axes3d as p3 #Import for 3D plot
+\end_layout
+
+\begin_layout Plain Layout
+
+import sys #import for command line arguments
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The required imports for the program 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<arg>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+#default values of the variables
+\end_layout
+
+\begin_layout Plain Layout
+
+Nx = 25
+\end_layout
+
+\begin_layout Plain Layout
+
+Ny = 25
+\end_layout
+
+\begin_layout Plain Layout
+
+Nbegin = 8
+\end_layout
+
+\begin_layout Plain Layout
+
+Nend = 17
+\end_layout
+
+\begin_layout Plain Layout
+
+Niter = 1500
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+if(len(sys.argv)==6):	#values obtained from command line
+\end_layout
+
+\begin_layout Plain Layout
+
+	Nx,Ny,Nbegin,Nend,Niter = int(sys.argv[1:])
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The five arguments required as an input for the successful execution of
+ the program are got in as command line arguments and are converted to int
+ or the defaault values are used.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<calc>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+phi = zeros((Nx,Ny))	#2D array which contains the potential distribution
+\end_layout
+
+\begin_layout Plain Layout
+
+phi[0][Nbegin:Nend+1] = ones(Nend-Nbegin+1)	#assigning the electrode potential
+\end_layout
+
+\begin_layout Plain Layout
+
+oldphi = phi.copy()
+\end_layout
+
+\begin_layout Plain Layout
+
+errors = zeros(Niter)
+\end_layout
+
+\begin_layout Plain Layout
+
+for i in range(Niter):
+\end_layout
+
+\begin_layout Plain Layout
+
+	oldphi = phi.copy()	#creating a copy of potential
+\end_layout
+
+\begin_layout Plain Layout
+
+	#mean value theorem for finding potential
+\end_layout
+
+\begin_layout Plain Layout
+
+	phi[1:-1,1:-1] = 0.25*(phi[1:-1,0:-2] + phi[1:-1,2:] + phi[0:-2,1:-1] +
+ phi[2:,1:-1])
+\end_layout
+
+\begin_layout Plain Layout
+
+	#boundary conditions
+\end_layout
+
+\begin_layout Plain Layout
+
+	phi[1:-1,0] =  phi[1:-1,1]
+\end_layout
+
+\begin_layout Plain Layout
+
+	phi[1:-1,-1] =  phi[1:-1,-2]
+\end_layout
+
+\begin_layout Plain Layout
+
+	phi[0,1:Nbegin] = phi[1,1:Nbegin]
+\end_layout
+
+\begin_layout Plain Layout
+
+	phi[0,Nend+1:-1] = phi[1,Nend+1:-1]
+\end_layout
+
+\begin_layout Plain Layout
+
+	phi[-1,1:Nbegin] = phi[-2,1:Nbegin]
+\end_layout
+
+\begin_layout Plain Layout
+
+	phi[-1,Nend+1:-1] = phi[-2,Nend+1:-1]
+\end_layout
+
+\begin_layout Plain Layout
+
+	#storing errors in a list
+\end_layout
+
+\begin_layout Plain Layout
+
+	errors[i] = amax(abs(phi - oldphi))
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+The potential is calculated by repeatedly assigning the potential as the
+ average of its surrounding values.
+ The boundaries are assigned a value equal to their adjacent values.
+ Error is calculated by taking the mximum of difference between oldphi and
+ phi.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<plots>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+#plot of errors and their best fits
+\end_layout
+
+\begin_layout Plain Layout
+
+figure(1)
+\end_layout
+
+\begin_layout Plain Layout
+
+xdata = arange(1,Niter+1,1)
+\end_layout
+
+\begin_layout Plain Layout
+
+A = c_[xdata,ones(size(xdata))]
+\end_layout
+
+\begin_layout Plain Layout
+
+out1 = lstsq(A, np.log(errors))[0]
+\end_layout
+
+\begin_layout Plain Layout
+
+#taken from 500 values as it is approx.
+ linear after that
+\end_layout
+
+\begin_layout Plain Layout
+
+out2 = lstsq(A[500:], np.log(errors[500:]))[0] 
+\end_layout
+
+\begin_layout Plain Layout
+
+#finding y data by maultiplying coeff.
+ matrix and variable matrix
+\end_layout
+
+\begin_layout Plain Layout
+
+ydata1 = np.exp(dot(A,out1))
+\end_layout
+
+\begin_layout Plain Layout
+
+ydata2 = np.exp(dot(A,out2))
+\end_layout
+
+\begin_layout Plain Layout
+
+#plotting every 50 th value for better readability
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(xdata[::50], errors[::50], 'ro', xdata, ydata1, 'b', xdata[500:], ydata2[50
+0:], 'g')
+\end_layout
+
+\begin_layout Plain Layout
+
+legend(('error','fit1','fit2')) #legend for the plot
+\end_layout
+
+\begin_layout Plain Layout
+
+yscale('log') #making the yscale in log
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel('Number of iterations')
+\end_layout
+
+\begin_layout Plain Layout
+
+ylabel('Error')
+\end_layout
+
+\begin_layout Plain Layout
+
+title('Error vs Number of Iterations')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+#Potential distribution of a surface in 3D plot
+\end_layout
+
+\begin_layout Plain Layout
+
+fig=figure(2) # open a new figure
+\end_layout
+
+\begin_layout Plain Layout
+
+ax=p3.Axes3D(fig) # Axes3D is the means to do a surface plot
+\end_layout
+
+\begin_layout Plain Layout
+
+x=arange(1,Nx+1) # create x and y axes
+\end_layout
+
+\begin_layout Plain Layout
+
+y=arange(1,Ny+1)
+\end_layout
+
+\begin_layout Plain Layout
+
+X,Y=meshgrid(x,y) # creates arrays out of x and y
+\end_layout
+
+\begin_layout Plain Layout
+
+title("The 3-D surface plot of the potential")
+\end_layout
+
+\begin_layout Plain Layout
+
+surf = ax.plot_surface(Y, X, phi, rstride=1, cstride=1, cmap=cm.jet)
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+#Plots the contour of the potential in the resistor
+\end_layout
+
+\begin_layout Plain Layout
+
+figure(3)
+\end_layout
+
+\begin_layout Plain Layout
+
+contour(y,x,phi.transpose())
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel('y')
+\end_layout
+
+\begin_layout Plain Layout
+
+ylabel('x')
+\end_layout
+
+\begin_layout Plain Layout
+
+title('Contour Plot of Potential')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+#Vector plot of the J vector
+\end_layout
+
+\begin_layout Plain Layout
+
+figure(4)
+\end_layout
+
+\begin_layout Plain Layout
+
+Jx = zeros((Nx,Ny))
+\end_layout
+
+\begin_layout Plain Layout
+
+Jy = zeros((Nx,Ny))
+\end_layout
+
+\begin_layout Plain Layout
+
+Jx[1:-1,1:-1] = 0.5*(phi[1:-1,0:-2]-phi[1:-1,2:])
+\end_layout
+
+\begin_layout Plain Layout
+
+Jy[1:-1,1:-1] = 0.5*(phi[0:-2,1:-1]-phi[2:,1:-1])
+\end_layout
+
+\begin_layout Plain Layout
+
+quiver(y,x,Jy.transpose(),Jx.transpose())
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel('y')
+\end_layout
+
+\begin_layout Plain Layout
+
+ylabel('x')
+\end_layout
+
+\begin_layout Plain Layout
+
+title('Vector Plot of J')
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+Iavg = sum(sqrt(Jx[2]**2 + Jy[2]**2) + sqrt(Jx[-2]**2 + Jy[-2]**2))/Ny
+\end_layout
+
+\begin_layout Plain Layout
+
+Idif = abs(sum(sqrt(Jx[2]**2 + Jy[2]**2) - sqrt(Jx[-2]**2 + Jy[-2]**2)))/Ny
+\end_layout
+
+\begin_layout Plain Layout
+
+#printing the Average current entering and leaving and the difference between
+ them
+\end_layout
+
+\begin_layout Plain Layout
+
+print Iavg,Idif
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+All the required plots are displayed and the Average current entering and
+ leaving and the difference between them is printed repectively.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<vary>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+#Error is calculated by varying Nx and Ny
+\end_layout
+
+\begin_layout Plain Layout
+
+error = []
+\end_layout
+
+\begin_layout Plain Layout
+
+def meanSquare( Nx, Ny):
+\end_layout
+
+\begin_layout Plain Layout
+
+	phi = zeros((Nx,Ny))
+\end_layout
+
+\begin_layout Plain Layout
+
+	phi[0] = ones(Ny)
+\end_layout
+
+\begin_layout Plain Layout
+
+	for i in range(Niter):
+\end_layout
+
+\begin_layout Plain Layout
+
+		phi[1:-1,1:-1] = 0.25*(phi[1:-1,0:-2] + phi[1:-1,2:] + phi[0:-2,1:-1] +
+ phi[2:,1:-1])
+\end_layout
+
+\begin_layout Plain Layout
+
+		phi[1:-1,0] =  phi[1:-1,1]
+\end_layout
+
+\begin_layout Plain Layout
+
+		phi[1:-1,-1] =  phi[1:-1,-2]
+\end_layout
+
+\begin_layout Plain Layout
+
+	#Theoretical value of potential varies linearly and is constructed by the
+ dot product given below
+\end_layout
+
+\begin_layout Plain Layout
+
+	theory_phi = dot(ones(Nx).reshape(Nx,1),linspace(1,0,Nx).reshape(1,Nx))
+\end_layout
+
+\begin_layout Plain Layout
+
+	#appends the difference between calculated and theoretical phi
+\end_layout
+
+\begin_layout Plain Layout
+
+	error.append(sum((phi - theory_phi)**2)/(Nx*Ny))
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+#running it for only two times as the process takes lots of time to run
+\end_layout
+
+\begin_layout Plain Layout
+
+r = Ny/Nx
+\end_layout
+
+\begin_layout Plain Layout
+
+N = 10
+\end_layout
+
+\begin_layout Plain Layout
+
+Nx = arange(0,N)*10+Nx
+\end_layout
+
+\begin_layout Plain Layout
+
+Ny = r*Nx
+\end_layout
+
+\begin_layout Plain Layout
+
+for i in range(0,N):
+\end_layout
+
+\begin_layout Plain Layout
+
+	meanSquare(Nx[i], Ny[i])
+\end_layout
+
+\begin_layout Plain Layout
+
+	
+\end_layout
+
+\begin_layout Plain Layout
+
+#Plotting the error list
+\end_layout
+
+\begin_layout Plain Layout
+
+figure(5)
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(Nx,error)
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel('Nx')
+\end_layout
+
+\begin_layout Plain Layout
+
+ylabel('Difference')
+\end_layout
+
+\begin_layout Plain Layout
+
+title('Error vs Nx')
+\end_layout
+
+\begin_layout Plain Layout
+
+show()
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Nx and Ny are varied by keeping their ratio constant.
+ The potential is calculated for the 10 pairs of values (Nx,Ny).
+ The error obtained by calculating the difference between the theoretical
+ value of potential and calculated value is also plotted.
+ The plotted error was observed to be increasinf with an increase in Nx
+ and Ny.
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<*>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+<<import>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<arg>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<calc>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<plots>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<vary>>
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Command Line
+\end_layout
+
+\begin_layout Standard
+
+\family typewriter
+python lap.py
+\end_layout
+
+\begin_layout Subsection
+Output
+\end_layout
+
+\begin_layout Subsubsection
+The variation of error with number of iterations along with their best fit
+ curves
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename figure_1.png
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+3D plot of the potential distribution
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename figure_2.png
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Contours of the potential
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename figure_3.png
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Vector plot of J
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename figure_4.png
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Error versus Nx
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Graphics
+	filename figure_5.png
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Iavg and Idiff
+\end_layout
+
+\begin_layout Standard
+0.0718618361551 0.00138407177121 
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\end_body
+\end_document

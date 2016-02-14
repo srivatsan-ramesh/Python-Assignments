@@ -1,0 +1,749 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\begin_modules
+noweb
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_math auto
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1.25cm
+\topmargin 1.25cm
+\rightmargin 1.25cm
+\bottommargin 1.25cm
+\headheight 1.25cm
+\headsep 1.25cm
+\footskip 1.25cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Week 8 : Vector Operations and Functions in Python
+\end_layout
+
+\begin_layout Author
+Srivatsan R
+\begin_inset Newline newline
+\end_inset
+
+EE14B058
+\begin_inset Newline newline
+\end_inset
+
+Department Of Electrical Engineering
+\end_layout
+
+\begin_layout Abstract
+The report is about a python assignment which introduces the basics of scientifi
+c python.
+\end_layout
+
+\begin_layout Section
+Python Assignment
+\end_layout
+
+\begin_layout Subsection
+Aim
+\end_layout
+
+\begin_layout Standard
+The aim of the python program is to plot the graph of 
+\begin_inset Formula $arctan(x)$
+\end_inset
+
+ by calculating the integral of 
+\begin_inset Formula $\int_{0}^{x}1/(1+t^{2})$
+\end_inset
+
+ .
+ The integral is calculated with quad() function and using the trapezium
+ method.
+ In both the cases error is also plotted.
+\end_layout
+
+\begin_layout Subsection
+Source Code
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<import>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+from pylab import *
+\end_layout
+
+\begin_layout Plain Layout
+
+import numpy
+\end_layout
+
+\begin_layout Plain Layout
+
+from scipy.special import jv
+\end_layout
+
+\begin_layout Plain Layout
+
+from scipy.integrate import quad
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+Importing the modules required for the successful execution of the program.
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<func>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+def f(t=0.0):
+\end_layout
+
+\begin_layout Plain Layout
+
+	return 1.0/(1.0+t*t)
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+The function whose integral is to be calculated.
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<trap>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+def trap(f,su,b,h):
+\end_layout
+
+\begin_layout Plain Layout
+
+	return h/2.0*(2*su[b]-1.0-su[b]+su[b-1])
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+The function to calculate integral of a function f given as an argument,
+ till an upper limit bh, where h is the height of each trapezium.
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<p1>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+x=linspace(0,5,51)
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(x,f(x),'g',lw=2,label='$1/(1+t^{2})$')
+\end_layout
+
+\begin_layout Plain Layout
+
+title(r'Plot of $1/(1+t^{2})$')
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel('t')
+\end_layout
+
+\begin_layout Plain Layout
+
+ylabel('$1/(1+t^{2})$')
+\end_layout
+
+\begin_layout Plain Layout
+
+figure()
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+For plotting 
+\begin_inset Formula $1/(1+t^{2})$
+\end_inset
+
+ graph by creating an array of linearly spaced numbers between 0 and 5.
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<p2>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+y=[]
+\end_layout
+
+\begin_layout Plain Layout
+
+for i in x:
+\end_layout
+
+\begin_layout Plain Layout
+
+	y.append(quad(f,0,i)[0])
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(x,y,'ro',markersize=8,label=r'quad fn')
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(x,numpy.arctan(x),'black',lw=2,label=r'$
+\backslash
+tan^{-1}(x)$')
+\end_layout
+
+\begin_layout Plain Layout
+
+legend()
+\end_layout
+
+\begin_layout Plain Layout
+
+title('Plot')
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel('x')
+\end_layout
+
+\begin_layout Plain Layout
+
+ylabel(r'$
+\backslash
+int_{0}^{x}du/(1+u^{2})$')
+\end_layout
+
+\begin_layout Plain Layout
+
+figure()
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+For plotting 
+\begin_inset Formula $arctan(x)$
+\end_inset
+
+ and 
+\begin_inset Formula $\int_{0}^{x}1/(1+t^{2})$
+\end_inset
+
+, calculated using the quad() function.
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<p3>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(x,abs(y-numpy.arctan(x)),'ro',markersize=8,label=r'Error in $
+\backslash
+int_{0}^{x}du/(1+u^{2})$')
+\end_layout
+
+\begin_layout Plain Layout
+
+yscale('log')
+\end_layout
+
+\begin_layout Plain Layout
+
+title(r'Error in $
+\backslash
+int_{0}^{x}du/(1+u^{2})$')
+\end_layout
+
+\begin_layout Plain Layout
+
+ylabel('Error')
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel('x')
+\end_layout
+
+\begin_layout Plain Layout
+
+figure()
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+For plotting the error in the integral calculated using quad() function.
+ The y axis is in log scale.
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status open
+
+\begin_layout Plain Layout
+
+<<p4>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+n=10
+\end_layout
+
+\begin_layout Plain Layout
+
+e=1
+\end_layout
+
+\begin_layout Plain Layout
+
+a=10**-8
+\end_layout
+
+\begin_layout Plain Layout
+
+z=[]
+\end_layout
+
+\begin_layout Plain Layout
+
+abserr=[]
+\end_layout
+
+\begin_layout Plain Layout
+
+eserr=[]
+\end_layout
+
+\begin_layout Plain Layout
+
+zprev=[]
+\end_layout
+
+\begin_layout Plain Layout
+
+harr=[]
+\end_layout
+
+\begin_layout Plain Layout
+
+while(e>a):
+\end_layout
+
+\begin_layout Plain Layout
+
+	xt=linspace(0,5,5*n+1)
+\end_layout
+
+\begin_layout Plain Layout
+
+	h=1.0/n
+\end_layout
+
+\begin_layout Plain Layout
+
+	harr.append(h)
+\end_layout
+
+\begin_layout Plain Layout
+
+	cum=cumsum(f(xt))
+\end_layout
+
+\begin_layout Plain Layout
+
+	z=[0]
+\end_layout
+
+\begin_layout Plain Layout
+
+	for q in range(1,len(cum)):
+\end_layout
+
+\begin_layout Plain Layout
+
+		z.append(trap(f,cum,q,h))
+\end_layout
+
+\begin_layout Plain Layout
+
+	if zprev!=[]:
+\end_layout
+
+\begin_layout Plain Layout
+
+		e=amax(abs(numpy.array(z[::n/10])-zprev[::n/20]))
+\end_layout
+
+\begin_layout Plain Layout
+
+		eserr.append(e)
+\end_layout
+
+\begin_layout Plain Layout
+
+	abserr.append(amax(abs(z[::n/10]-numpy.arctan(xt[::n/10]))))
+\end_layout
+
+\begin_layout Plain Layout
+
+	n*=2
+\end_layout
+
+\begin_layout Plain Layout
+
+	zprev=z
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(numpy.array(harr[:-1]),numpy.array(abserr[:-1]),'ro',label='Exact error')
+\end_layout
+
+\begin_layout Plain Layout
+
+plot(numpy.array(harr[:-1]),numpy.array(eserr),'g+',label='Estimated error')
+\end_layout
+
+\begin_layout Plain Layout
+
+xscale('log')
+\end_layout
+
+\begin_layout Plain Layout
+
+yscale('log')
+\end_layout
+
+\begin_layout Plain Layout
+
+ylabel('Error')
+\end_layout
+
+\begin_layout Plain Layout
+
+xlabel('h')
+\end_layout
+
+\begin_layout Plain Layout
+
+legend()
+\end_layout
+
+\begin_layout Plain Layout
+
+show()
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+For plotting the estimated error and the actual error of calculating the
+ integral 
+\begin_inset Formula $\int_{0}^{x}1/(1+t^{2})$
+\end_inset
+
+ by trapezium method.
+ The four plots are then displayed.
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Flex Chunk
+status collapsed
+
+\begin_layout Plain Layout
+
+<<*>>=
+\end_layout
+
+\begin_layout Plain Layout
+
+<<import>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<func>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<trap>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<p1>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<p2>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<p3>>
+\end_layout
+
+\begin_layout Plain Layout
+
+<<p4>>
+\end_layout
+
+\begin_layout Plain Layout
+
+@
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Outputs
+\end_layout
+
+\begin_layout Subsubsection
+Plot 1
+\end_layout
+
+\begin_layout LyX-Code
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename /home/srivatsan/Desktop/Screenshot from 2015-10-04 23:09:55.png
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Plot of 
+\begin_inset Formula $1/(1+t^{2})$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+
+\end_layout
+
+\end_body
+\end_document
